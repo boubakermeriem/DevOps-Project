@@ -8,7 +8,7 @@ services:
       - MYSQL_ROOT_PASSWORD=meriem # Vérifie si ce mot de passe est correct
       - MYSQL_DATABASE=stationSki
     ports:
-      - "3306:3306" # Expose le port MySQL
+      - "3308:3306" # Expose le port MySQL
     volumes:
       - db_data:/var/lib/mysql
   app-station-ski:

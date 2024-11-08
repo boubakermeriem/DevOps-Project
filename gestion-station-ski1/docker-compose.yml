@@ -2,7 +2,7 @@ version: "3.8"
 services:
   mysqldb:
     image: mysql
-    container_name: db_mysql
+    container_name:  c577c7cba3bb_gestion-station-ski1_dbmysql_1
     restart: unless-stopped
     ports:
       - 3306:3306

@@ -1,21 +1,37 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  mysqldb:
+  dbmysql:
     image: mysql
-    container_name: db_mysql
     restart: unless-stopped
-    ports:
-      - 3306:3306
     environment:
+      - MYSQL_ROOT_PASSWORD=meriem # Vérifie si ce mot de passe est correct
       - MYSQL_DATABASE=stationSki
-      - DATABASE_DRIVER=com.mysql.cj.jdbc.Driver
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-  springboot:
-    image: meriemboubaker/gestion-station-ski:1.0.0
-    restart: unless-stopped
+    ports:
+      - "3306:3306" # Expose le port MySQL
+    volumes:
+      - db_data:/var/lib/mysql
+  app-station-ski:
+    depends_on:
+      - dbmysql
+
+    image:  meriemboubaker/gestion-station-ski:1.0.0 #nom du repository fil dockerhub est meriemboubaker
+    restart: on-failure
     ports:
       - "8089:8089"
+    volumes:
+      - app_logs:/app/logs
+    environment:
+      SPRING_APPLICATION_JSON: '{
+          "spring.datasource.url": "jdbc:mysql://dbmysql:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false",
+         "spring.datasource.username": "root",
+         "spring.datasource.password": "meriem",
+         "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQL5InnoDBDialect",
+         "spring.jpa.hibernate.ddl-auto": "update" 
+       }'
+    stdin_open: true
+    tty: true
 
-    depends_on:
-      - mysqldb
-
+volumes:
+  db_data:
+  app_logs:

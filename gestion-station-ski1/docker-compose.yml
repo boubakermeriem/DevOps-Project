@@ -35,3 +35,25 @@ services:
 volumes:
   db_data:
   app_logs:
+    prometheus:
+      image: prom/prometheus
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      restart: on-failure
+
+      grafana:
+        image: grafana/grafana
+        ports:
+          - "3000:3000"
+        environment:
+          - GF_SECURITY_ADMIN_PASSWORD=grafana  # Mot de passe admin Grafana
+        volumes:
+          - grafana_data:/var/lib/grafana
+        restart: on-failure
+
+    volumes:
+      db_data:
+      app_logs:
+      grafana_data:
